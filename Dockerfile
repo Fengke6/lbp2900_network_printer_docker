@@ -1,5 +1,5 @@
 # 第一阶段：构建阶段
-FROM ubuntu:20.04 AS builder
+FROM ubuntu:focal AS builder
 
 # 设置非交互式前端
 ARG DEBIAN_FRONTEND=noninteractive
@@ -23,7 +23,7 @@ RUN autoreconf -i \
  && make
 
 # 第二阶段：运行阶段
-FROM ubuntu:20.04-slim
+FROM ubuntu:focal
 
 # 设置非交互式前端
 ARG DEBIAN_FRONTEND=noninteractive
