@@ -1,0 +1,29 @@
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - main  # 触发工作流的分支
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -t lbp2900_network_printer_docker:latest .
+
+    - name: Save Docker image
+      run: docker save -o lbp2900_network_printer_docker.tar lbp2900_network_printer_docker:latest
+
+    - name: Upload Docker image as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: lbp2900_network_printer_docker
+        path: lbp2900_network_printer_docker.tar
