@@ -1,4 +1,4 @@
-name: Docker Build
+name: Docker Build and Save Artifact
 
 on:
   push:
@@ -13,8 +13,25 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      # 1. 检出代码
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker build -t lbp2900_network_printer_docker:latest .
+      # 2. 设置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # 3. 构建 Docker 镜像
+      - name: Build Docker image
+        run: docker build -t lbp2900-cups .
+
+      # 4. 将镜像保存为 tar 文件
+      - name: Save Docker image as artifact
+        run: docker save -o lbp2900-cups.tar lbp2900-cups
+
+      # 5. 上传 tar 文件为构建产物
+      - name: Upload Docker image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lbp2900-cups-image
+          path: lbp2900-cups.tar
